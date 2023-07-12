@@ -1,6 +1,8 @@
 process DADA2_TAXONOMY {
     tag "${fasta},${database}"
     label 'process_high'
+    publishDir "DADA2_TAXONOMY", mode: 'copy'
+
 
     conda "bioconda::bioconductor-dada2=1.22.0 conda-forge::r-digest=0.6.30"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
