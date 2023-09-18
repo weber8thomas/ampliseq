@@ -2,7 +2,6 @@ process DADA2_DENOISING {
     tag "$meta.run"
     label 'process_medium'
     label 'process_long'
-    publishDir "DADA2_DENOISING", mode: 'copy'
 
     conda "bioconda::bioconductor-dada2=1.22.0 conda-forge::r-digest=0.6.30"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -37,9 +36,6 @@ process DADA2_DENOISING {
         filtFs <- sort(list.files("./filtered/", pattern = "_1.filt.fastq.gz", full.names = TRUE))
         filtRs <- sort(list.files("./filtered/", pattern = "_2.filt.fastq.gz", full.names = TRUE))
 
-
-
-
         #denoising
         sink(file = "${meta.run}.dada.log")
         dadaFs <- dada(filtFs, err = errF, $args, multithread = $task.cpus)
@@ -48,41 +44,8 @@ process DADA2_DENOISING {
         saveRDS(dadaRs, "${meta.run}_2.dada.rds")
         sink(file = NULL)
 
-        ##make table
-        #mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, $args2, verbose=TRUE)
-        #saveRDS(mergers, "${meta.run}.mergers.rds")
-        #seqtab <- makeSequenceTable(mergers)
-        #saveRDS(seqtab, "${meta.run}.seqtab.rds")
-
-
-        mergers <- mergePairs(dadaFs,
-                            filtFs,
-                            dadaRs,
-                            filtRs,
-                            trimOverhang = TRUE,
-                            returnRejects = TRUE)
-        print(head(mergers))
-
-        concat <- mergePairs(dadaFs,
-                            filtFs,
-                            dadaRs,
-                            filtRs,
-                            trimOverhang = TRUE,
-                            justConcatenate = TRUE)
-        print(head(concat))
-
-        for (x in names(mergers)) {
-            tmp <- concat[[x]][!mergers[[x]]\$accept & mergers[[x]]\$nmatch < 3, ]
-            mergers[[x]][!mergers[[x]]\$accept & mergers[[x]]\$nmatch < 3, ] <- tmp
-            mergers[[x]] <- mergers[[x]][mergers[[x]]\$accept,]
-        }
-        
-        print(head(mergers))
-
-
-
         #make table
-        # mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, $args2, verbose=TRUE)
+        mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, $args2, verbose=TRUE)
         saveRDS(mergers, "${meta.run}.mergers.rds")
         seqtab <- makeSequenceTable(mergers)
         saveRDS(seqtab, "${meta.run}.seqtab.rds")

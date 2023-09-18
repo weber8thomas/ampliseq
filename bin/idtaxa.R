@@ -8,7 +8,7 @@ args <- commandArgs(TRUE)
 
 input <- args[1]
 threads <- args[2] |> as.numeric()
-trainingSet.path <- "/g/korbel/weber/TMP/pr2_version_4.14.0_SSU.decipher.trained.rds"
+trainingSet.path <- "/g/korbel/weber/TMP/VINCENT_GROUP/pr2_version_4.14.0_SSU.decipher.trained.rds"
 output <- args[3]
 # output_versions <- args[4]
 # output_args <- args[5]
@@ -45,6 +45,7 @@ data.table(names(taxo), taxo, confidence) |> fwrite(
 )
 
 saveRDS(data.table(names(taxo), taxo, confidence), "ASV_tax.rds")
-# writeLines(c("\\"${task.process}\\":", paste0("    R: ", paste0(R.Version()[c("major","minor")], collapse = ".")),paste0("    dada2: ", packageVersion("dada2")) ), "versions.yml")
-# writeLines(c("TEST_assignTaxonomy"), "assignTaxonomy.args.txt")
-# write.table("assignTaxonomy\t$args\ntaxlevels\t$taxlevels\nseed\t$seed", file = "assignTaxonomy.args.txt")
+writeLines(c("\"${task.process}\\":", paste0("    R: ", paste0(R.Version()[c("major","minor")], collapse = ".")),paste0("    dada2: ", packageVersion("dada2")) ), "versions.yml")
+writeLines(c("TEST_assignTaxonomy"), "assignTaxonomy.args.txt")
+# writeLines(c("TEST_assignTaxonomy"), "versions.yml")
+write.table("assignTaxonomy\t$args\ntaxlevels\t$taxlevels\nseed\t$seed", file = "assignTaxonomy.args.txt")
