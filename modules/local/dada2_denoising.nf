@@ -48,38 +48,6 @@ process DADA2_DENOISING {
         saveRDS(dadaRs, "${meta.run}_2.dada.rds")
         sink(file = NULL)
 
-        ##make table
-        #mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, $args2, verbose=TRUE)
-        #saveRDS(mergers, "${meta.run}.mergers.rds")
-        #seqtab <- makeSequenceTable(mergers)
-        #saveRDS(seqtab, "${meta.run}.seqtab.rds")
-
-
-        mergers <- mergePairs(dadaFs,
-                            filtFs,
-                            dadaRs,
-                            filtRs,
-                            trimOverhang = TRUE,
-                            returnRejects = TRUE)
-        print(head(mergers))
-
-        concat <- mergePairs(dadaFs,
-                            filtFs,
-                            dadaRs,
-                            filtRs,
-                            trimOverhang = TRUE,
-                            justConcatenate = TRUE)
-        print(head(concat))
-
-        for (x in names(mergers)) {
-            tmp <- concat[[x]][!mergers[[x]]\$accept & mergers[[x]]\$nmatch < 3, ]
-            mergers[[x]][!mergers[[x]]\$accept & mergers[[x]]\$nmatch < 3, ] <- tmp
-            mergers[[x]] <- mergers[[x]][mergers[[x]]\$accept,]
-        }
-        
-        print(head(mergers))
-
-
 
         #make table
 
@@ -90,7 +58,20 @@ process DADA2_DENOISING {
                 min_overlap_obs <- mergers[[x]][["nmatch"]] + mergers[[x]][["nmismatch"]]
                 min_overlap_obs <- quantile(min_overlap_obs[mergers[[x]][["accept"]]], 0.001)
                 to_concat <- !mergers[[x]][["accept"]] & (mergers[[x]][["nmismatch"]] + mergers[[x]][["nmatch"]]) < min_overlap_obs
-                mergers[[x]][to_concat, ] <- concats[[x]][to_concat, ]
+                
+                # Remove NAs from the to_concat
+                to_concat[is.na(to_concat)] <- FALSE
+                
+                # Ensure that the number of rows in both data frames are the same for the assignment
+                if (sum(to_concat) == sum(to_concat & row.names(concats[[x]]) %in% row.names(mergers[[x]]))) {
+                    mergers[[x]][to_concat, ] <- concats[[x]][to_concat, ]
+                } else {
+                    # Handle this situation, maybe print a warning or handle differently
+                    warning("Mismatch in rows for assignment for x =", x)
+                }
+
+                # mergers[[x]][to_concat, ] <- concats[[x]][to_concat, ]
+                
                 mergers[[x]] <- mergers[[x]][mergers[[x]][["accept"]], ]
             }
         } else {
