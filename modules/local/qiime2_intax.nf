@@ -2,15 +2,11 @@ process QIIME2_INTAX {
     tag "${tax}"
     label 'process_low'
 
-    container "quay.io/qiime2/core:2022.11"
-
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
+    container "qiime2/core:2023.7"
 
     input:
     path(tax) //ASV_tax_species.tsv
+    val(script)
 
     output:
     path("taxonomy.qza") , emit: qza
@@ -20,8 +16,16 @@ process QIIME2_INTAX {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    def script_cmd = script ? "$script $tax" : "cp $tax tax.tsv"
     """
-    parse_dada2_taxonomy.r $tax
+    export MPLCONFIGDIR="./mplconfigdir"
+    export NUMBA_CACHE_DIR="./numbacache"
+
+    $script_cmd
 
     qiime tools import \\
         --type 'FeatureData[Taxonomy]' \\

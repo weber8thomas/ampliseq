@@ -3,17 +3,133 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## nf-core/ampliseq version 2.7.0dev
+## nf-core/ampliseq version 2.9.0 - 2024-04-03
+
+### `Added`
+
+- [#700](https://github.com/nf-core/ampliseq/pull/700) - Optional `--save_intermediates` to publish QIIME2 data objects (.qza) and visualisation objects (.qzv)
+- [#702](https://github.com/nf-core/ampliseq/pull/702),[#723](https://github.com/nf-core/ampliseq/pull/723),[#728](https://github.com/nf-core/ampliseq/pull/728),[#729](https://github.com/nf-core/ampliseq/pull/729) - Add multiple regions analysis (including 5R / SMURF / q2-sidle)
+
+### `Changed`
+
+- [#719](https://github.com/nf-core/ampliseq/pull/719) - Versions of all (instead of selected) processes are now exported to `pipeline_info/software_versions.yml`
+
+### `Fixed`
+
+- [#697](https://github.com/nf-core/ampliseq/pull/697),[#699](https://github.com/nf-core/ampliseq/pull/699),[#713](https://github.com/nf-core/ampliseq/pull/713) - Template update for nf-core/tools version 2.13.1
+- [#711](https://github.com/nf-core/ampliseq/pull/711) - From r207 and onwards Archaea sequences were omitted when parsing GTDB databases. (This did not affect `sbdi-gtdb` databases, only `gtdb`.)
+- [#715](https://github.com/nf-core/ampliseq/pull/715) - Fix filtering vsearch clusters for high number of clusters
+- [#717](https://github.com/nf-core/ampliseq/pull/717) - Fix edge case for sorting file names by using radix method
+- [#718](https://github.com/nf-core/ampliseq/pull/718) - Require a minimum sequence length of 50bp for taxonomic classifcation after using ITSx
+- [#721](https://github.com/nf-core/ampliseq/pull/721) - Fix error `unknown recognition error type: groovyjarjarantlr4.v4.runtime.LexerNoViableAltException` caused by a missing `\` in nf-core module `pigz/uncompress` (which had no consequences but was confusing)
+- [#722](https://github.com/nf-core/ampliseq/pull/722) - When barrnap detects several genes select the lowest e-value
+- [#726](https://github.com/nf-core/ampliseq/pull/726) - Add fallback to `download_pipeline.yml` because the pipeline does not support stub runs ([#2846](https://github.com/nf-core/tools/pull/2846))
+
+### `Dependencies`
+
+- [#720](https://github.com/nf-core/ampliseq/pull/720) - Updated nf-core modules, DADA2, and Phyloseq
+
+| software | previously | now    |
+| -------- | ---------- | ------ |
+| cutadapt | 3.4        | 4.6    |
+| DADA2    | 1.28.0     | 1.30.0 |
+| Phyloseq | 1.44.0     | 1.46.0 |
+
+### `Removed`
+
+- [#710](https://github.com/nf-core/ampliseq/pull/710) - Removed Phyloref from DADA2 reference option because it's part of PR2 5.0.0
+
+## nf-core/ampliseq version 2.8.0 - 2024-01-16
+
+### `Added`
+
+- [#666](https://github.com/nf-core/ampliseq/pull/666) - Added Greengenes2 database, version 2022.10, support for QIIME2 taxonomic classification.
+- [#667](https://github.com/nf-core/ampliseq/pull/667),[#691](https://github.com/nf-core/ampliseq/pull/691) - Added `--qiime_ref_tax_custom` to permit custom reference database for QIIME2 taxonomic classification
+- [#674](https://github.com/nf-core/ampliseq/pull/674) - Add PhytoRef database for DADA2 taxonomy assignment using `--dada_ref_taxonomy phytoref`
+- [#675](https://github.com/nf-core/ampliseq/pull/675) - Add the Zehr lab nifH database for DADA2 taxonomy assignment using `--dada_ref_taxonomy zehr-nifh`
+- [#681](https://github.com/nf-core/ampliseq/pull/681) - For DADA2, with `--dada_addspecies_allowmultiple` multiple exact species matches are reported and with `--dada_taxonomy_rc` reverse-complement matches are also considered in taxonomic classification
+
+### `Changed`
+
+- [#677](https://github.com/nf-core/ampliseq/pull/677) - Added cut_its information to SDBI export
+
+### `Fixed`
+
+- [#672](https://github.com/nf-core/ampliseq/pull/672),[#688](https://github.com/nf-core/ampliseq/pull/688),[#691](https://github.com/nf-core/ampliseq/pull/691) - Updated documentation
+- [#676](https://github.com/nf-core/ampliseq/pull/676) - Phyloseq sometimes only produced one of multiple output files
+- [#679](https://github.com/nf-core/ampliseq/pull/679) - Prevent masking low complexity regions by VSEARCH with lower case letters
+- [#680](https://github.com/nf-core/ampliseq/pull/680),[#673](https://github.com/nf-core/ampliseq/pull/673) - Improved pipeline summary report & error messages
+- [#683](https://github.com/nf-core/ampliseq/pull/683) - Template update for nf-core/tools version 2.11
+- [#687](https://github.com/nf-core/ampliseq/pull/687) - Correct conda package for ASV SSU filtering
+
+### `Dependencies`
+
+### `Removed`
+
+## nf-core/ampliseq version 2.7.1 - 2023-11-14
 
 ### `Added`
 
 ### `Changed`
 
+- [#657](https://github.com/nf-core/ampliseq/pull/657) - Improved parameter descriptions and sequence
+
+### `Fixed`
+
+- [#655](https://github.com/nf-core/ampliseq/pull/655) - Added `NUMBA_CACHE_DIR` to fix downstream analysis with QIIME2 that failed on some systems
+- [#656](https://github.com/nf-core/ampliseq/pull/656) - Moved conda-check to script-section and replaced `exit 1` with `error()`
+- [#657](https://github.com/nf-core/ampliseq/pull/657) - Corrected inaccurate reporting of QIIME2 taxonomic classifications and ASV length filtering
+
+### `Dependencies`
+
+### `Removed`
+
+## nf-core/ampliseq version 2.7.0 - 2023-10-20
+
+### `Added`
+
+- [#558](https://github.com/nf-core/ampliseq/pull/558),[#619](https://github.com/nf-core/ampliseq/pull/619),[#625](https://github.com/nf-core/ampliseq/pull/625),[#632](https://github.com/nf-core/ampliseq/pull/632),[#644](https://github.com/nf-core/ampliseq/pull/644) - Pipeline summary report
+- [#615](https://github.com/nf-core/ampliseq/pull/615) - Phyloseq R object creation
+- [#622](https://github.com/nf-core/ampliseq/pull/622) - ASV post-clustering with Vsearch
+- [#637](https://github.com/nf-core/ampliseq/pull/637) - Taxonomic classification with Kraken2, parameter `--kraken2_ref_taxonomy`, `--kraken2_ref_tax_custom`, `--kraken2_assign_taxlevels`, `--kraken2_confidence`
+- [#639](https://github.com/nf-core/ampliseq/pull/639) - GTDB release 214.1 for taxonomic classification with DADA2, using `--dada_ref_taxonomy gtdb` or `--dada_ref_taxonomy gtdb=R08-RS214`
+- [#641](https://github.com/nf-core/ampliseq/pull/641) - Continue analysis even when individual files fail the filtering threshold, added parameter `--ignore_failed_filtering`
+
+### `Changed`
+
+- [#616](https://github.com/nf-core/ampliseq/pull/616) - When using a sample sheet with `--input` containing forward and reverse reads, specifying `--single_end` will only extract forward reads and treat the data as single ended instead of extracting forward and reverse reads.
+- [#616](https://github.com/nf-core/ampliseq/pull/616) - `--input` was split into three params: (1) `--input` for samplesheet, (2) `--input_fasta` for ASV/OTU fasta input, (3) `--input_folder` direct FASTQ input
+
+| Param updated | Param old | Accepts                                  |
+| ------------- | --------- | ---------------------------------------- |
+| input         | input     | samplesheet, .tsv/.csv/.yml/.yaml        |
+| input_fasta   | input     | ASV/OTU sequences, .fasta                |
+| input_folder  | input     | Folder containing compressed fastq files |
+
+- [#639](https://github.com/nf-core/ampliseq/pull/639) - `--dada_ref_taxonomy gtdb` points towards GTDB release 214.1 instead of GTDB release 207 for taxonomic classification with DADA2
+- [#645](https://github.com/nf-core/ampliseq/pull/645) - Updated documentation, including workflow figure
+
 ### `Fixed`
 
 - [#605](https://github.com/nf-core/ampliseq/pull/605) - Make `--sbdiexport` compatible with PR2 version 5.0.0
+- [#614](https://github.com/nf-core/ampliseq/pull/614),[#620](https://github.com/nf-core/ampliseq/pull/620),[#642](https://github.com/nf-core/ampliseq/pull/642) - Template update for nf-core/tools version 2.10
+- [#617](https://github.com/nf-core/ampliseq/pull/617) - Fix database compatibility check for `--sbdiexport`
+- [#628](https://github.com/nf-core/ampliseq/pull/628) - Fix edge case for sample sheet input when using specific combinations of sampleID and forwardReads or reverseReads that will forward one file too much to cutadapt
+- [#630](https://github.com/nf-core/ampliseq/pull/630) - ASV rRNA (barrnap), length, and codon filter now work with ASV fasta file input
+- [#633](https://github.com/nf-core/ampliseq/pull/633) - UNIFRAC in QIIME2_DIVERSITY_CORE is now prevented from using a GPU to avoid errors
+- [#643](https://github.com/nf-core/ampliseq/pull/643) - Fix using `--skip_dada_addspecies` without `--dada_ref_tax_custom_sp` which was broken in 2.6.0 & 2.6.1
+- [#647](https://github.com/nf-core/ampliseq/pull/647) - Update of credits
 
 ### `Dependencies`
+
+- [#646](https://github.com/nf-core/ampliseq/pull/646) - Updated dependencies, see below:
+
+| software | previously | now    |
+| -------- | ---------- | ------ |
+| FASTQC   | 0.11.9     | 0.12.1 |
+| DADA2    | 1.22.0     | 1.28.0 |
+| PICRUSt2 | 2.5.0      | 2.5.2  |
+| QIIME2   | 2022.11    | 2023.7 |
 
 ### `Removed`
 

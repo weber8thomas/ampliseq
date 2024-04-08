@@ -1,14 +1,7 @@
 process QIIME2_EXTRACT {
     tag "${meta.FW_primer}-${meta.RV_primer}"
-    label 'process_low'
-    label 'single_cpu'
 
-    container "quay.io/qiime2/core:2022.11"
-
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
+    container "qiime2/core:2023.7"
 
     input:
     tuple val(meta), path(database)
@@ -21,8 +14,15 @@ process QIIME2_EXTRACT {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    def args = task.ext.args ?: ''
     """
-    export XDG_CONFIG_HOME="\${PWD}/HOME"
+    export XDG_CONFIG_HOME="./xdgconfig"
+    export MPLCONFIGDIR="./mplconfigdir"
+    export NUMBA_CACHE_DIR="./numbacache"
 
     ### Import
     qiime tools import \\
@@ -36,9 +36,11 @@ process QIIME2_EXTRACT {
         --output-path ref-taxonomy.qza
     #Extract sequences based on primers
     qiime feature-classifier extract-reads \\
+        --p-n-jobs ${task.cpus} \\
         --i-sequences ref-seq.qza \\
         --p-f-primer ${meta.FW_primer} \\
         --p-r-primer ${meta.RV_primer} \\
+        $args \\
         --o-reads ${meta.FW_primer}-${meta.RV_primer}-ref-seq.qza \\
         --quiet
 

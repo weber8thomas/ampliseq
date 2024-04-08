@@ -2,12 +2,7 @@ process QIIME2_INASV {
     tag "${asv}"
     label 'process_low'
 
-    container "quay.io/qiime2/core:2022.11"
-
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
+    container "qiime2/core:2023.7"
 
     input:
     path(asv)
@@ -20,7 +15,14 @@ process QIIME2_INASV {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
     """
+    export MPLCONFIGDIR="./mplconfigdir"
+    export NUMBA_CACHE_DIR="./numbacache"
+
     # remove first line if needed
     sed '/^# Constructed from biom file/d' "$asv" > biom-table.txt
 

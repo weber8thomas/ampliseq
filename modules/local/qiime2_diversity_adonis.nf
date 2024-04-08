@@ -2,27 +2,29 @@ process QIIME2_DIVERSITY_ADONIS {
     tag "${core.baseName} - ${formula}"
     label 'process_low'
 
-    container "quay.io/qiime2/core:2022.11"
-
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
+    container "qiime2/core:2023.7"
 
     input:
     tuple path(metadata), path(core), val(formula)
 
     output:
     path("adonis/*")     , emit: html
+    path("*.qzv")        , emit: qzv
     path "versions.yml"  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "QIIME2 does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
     def args = task.ext.args ?: ''
     """
-    export XDG_CONFIG_HOME="\${PWD}/HOME"
+    export XDG_CONFIG_HOME="./xdgconfig"
+    export MPLCONFIGDIR="./mplconfigdir"
+    export NUMBA_CACHE_DIR="./numbacache"
 
     qiime diversity adonis \\
         --p-n-jobs $task.cpus \\

@@ -11,15 +11,9 @@
         ],
         "timestamp": "2023-05-28T21:08:54+0000"
     },
-    "software_versions": {
-        "content": [
-            "{BARRNAP={barrnap=0.9}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, CUTADAPT_BASIC={cutadapt=3.4}, DADA2_DENOISING={R=4.1.1, dada2=1.22.0}, DADA2_FILTNTRIM={R=4.1.1, dada2=1.22.0}, DADA2_QUALITY1={R=4.1.1, ShortRead=1.52.0, dada2=1.22.0}, QIIME2_INSEQ={qiime2=2022.11.1}, RENAME_RAW_DATA_FILES={sed=4.7}, TRUNCLEN={pandas=1.1.5, python=3.9.1}, Workflow={nf-core/ampliseq=2.7.0dev}}"
-        ],
-        "timestamp": "2023-05-28T21:08:54+0000"
-    },
     "overall_summary_tsv": {
         "content": [
-            "overall_summary.tsv:md5,f0dd8c3dc3f45b84a1e32f88aabe7d08"
+            "overall_summary.tsv:md5,19d8b19b8f406d238011c2b3d384b7d3"
         ],
         "timestamp": "2023-05-28T21:08:54+0000"
     },
@@ -42,10 +36,18 @@
         ],
         "timestamp": "2023-05-28T21:08:54+0000"
     },
+    "kraken2": {
+        "content": [
+            "ASV_tax.greengenes.kraken2.classifiedreads.txt:md5,9cbbe5e45608f14fe4d8ca32c3ad6518",
+            "ASV_tax.greengenes.kraken2.complete.tsv:md5,cbdd1db05ba897ac9972b106a8138956",
+            "ASV_tax.greengenes.kraken2.tsv:md5,87f748440bf5b3ce1c73029c495ff6e9"
+        ],
+        "timestamp": "2023-09-15T21:16:26+0000"
+    },
     "multiqc": {
         "content": [
-            "multiqc_general_stats.txt:md5,8429be0a16adf09b6634bf31b430bfac",
-            "multiqc_cutadapt.txt:md5,e89359b4478ef5d10620709f651f26a2"
+            "multiqc_general_stats.txt:md5,5761ecfac7e4d5dca249af61cd3f3de9",
+            "multiqc_cutadapt.txt:md5,f022f739ce976fd43677d8889c7ba54b"
         ],
         "timestamp": "2023-05-28T21:08:54+0000"
     }
