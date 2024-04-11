@@ -5,11 +5,11 @@
 include { CUTADAPT as CUTADAPT_TAXONOMY  } from '../../modules/nf-core/cutadapt/main'
 include { VSEARCH_USEARCHGLOBAL          } from '../../modules/nf-core/vsearch/usearchglobal/main'
 
-// include { DADA2_TAXONOMY                               } from '../../modules/local/dada2_taxonomy'
-include { DADA2_TAXONOMY                              } from '../../modules/local/decipher_idtaxa' // NEW
+include { DADA2_TAXONOMY                               } from '../../modules/local/dada2_taxonomy'
+// include { DADA2_TAXONOMY                              } from '../../modules/local/decipher_idtaxa' // NEW
 include { DADA2_ADDSPECIES                             } from '../../modules/local/dada2_addspecies'
 include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_STD   } from '../../modules/local/format_taxresults'
-include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_ADDSP } from '../../modules/local/format_taxresults'
+include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_ADDSP } from ' ../../modules/local/format_taxresults'
 include { ASSIGNSH                                     } from '../../modules/local/assignsh'
 
 include { makeComplement                 } from '../../subworkflows/local/utils_nfcore_ampliseq_pipeline'
