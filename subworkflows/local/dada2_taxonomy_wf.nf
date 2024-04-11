@@ -6,9 +6,10 @@ include { CUTADAPT as CUTADAPT_TAXONOMY  } from '../../modules/nf-core/cutadapt/
 include { VSEARCH_USEARCHGLOBAL          } from '../../modules/nf-core/vsearch/usearchglobal/main'
 
 include { DADA2_TAXONOMY                               } from '../../modules/local/dada2_taxonomy'
+// include { DADA2_TAXONOMY                              } from '../../modules/local/decipher_idtaxa' // NEW
 include { DADA2_ADDSPECIES                             } from '../../modules/local/dada2_addspecies'
 include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_STD   } from '../../modules/local/format_taxresults'
-include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_ADDSP } from '../../modules/local/format_taxresults'
+include { FORMAT_TAXRESULTS as FORMAT_TAXRESULTS_ADDSP } from ' ../../modules/local/format_taxresults'
 include { ASSIGNSH                                     } from '../../modules/local/assignsh'
 
 include { makeComplement                 } from '../../subworkflows/local/utils_nfcore_ampliseq_pipeline'
@@ -57,6 +58,7 @@ workflow DADA2_TAXONOMY_WF {
     }
 
     //DADA2 assignTaxonomy
+    // DADA2_TAXONOMY ( ch_fasta, ch_assigntax, ASV_tax_name + ".${val_dada_ref_taxonomy}.tsv", taxlevels )
     DADA2_TAXONOMY ( ch_fasta, ch_assigntax, ASV_tax_name + ".${val_dada_ref_taxonomy}.tsv", taxlevels )
     ch_versions_dada_taxonomy = ch_versions_dada_taxonomy.mix(DADA2_TAXONOMY.out.versions)
     if (params.cut_its != "none") {
